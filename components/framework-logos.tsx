@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const frameworks = [
-    { name: "Vue", color: "#42b883" },
+    { name: "HTML", color: "#e34f26" },
+    { name: "CSS", color: "#1572b6" },
+    { name: "JavaScript", color: "#f7df1e" },
+    { name: "TypeScript", color: "#3178c6" },
     { name: "React", color: "#61dafb" },
-    { name: "Preact", color: "#673ab8" },
-    { name: "Lit", color: "#324fff" },
-    { name: "Svelte", color: "#ff3e00" },
-    { name: "Solid", color: "#2c4f7c" },
-    { name: "Qwik", color: "#ac7ef4" },
+    { name: "Next.js", color: "#000000" },
+    { name: "ASP.NET", color: "#512bd4" },
+    { name: "C#", color: "#239120" },
 ];
 
 export function FrameworkLogos() {
@@ -18,7 +19,7 @@ export function FrameworkLogos() {
         <section className="py-12 border-y border-border bg-background overflow-hidden">
             <div className="container mx-auto px-4 md:px-6 text-center mb-8">
                 <h2 className="text-2xl font-semibold text-muted-foreground">
-                    Vite powers your favorite frameworks
+                    Nossa stack tecnologica
                 </h2>
             </div>
 

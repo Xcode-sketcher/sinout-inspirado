@@ -14,24 +14,24 @@ const team = [
         tags: ["Agile", "Leadership", "Jira"],
         color: "from-blue-500 to-cyan-500",
         responsibilities: [
-            { icon: ClipboardList, label: "Scrum Master", color: "text-blue-400" },
-            { icon: Code2, label: "Full Stack", color: "text-green-400" },
             { icon: Palette, label: "UI/UX", color: "text-purple-400" },
             { icon: Users, label: "Leadership", color: "text-yellow-400" },
+            { icon: Code2, label: "Desenvolvimento", color: "text-green-400" },
+            { icon: ClipboardList, label: "Metodologias Ágeis", color: "text-blue-400" },
         ]
     },
     {
         name: "Luana Miron",
         role: "Product Owner & Marketing",
-        handle: "@LuanaMiron",
+        handle: "@luanarochamiron",
         avatar: "/Luana.svg",
         tags: ["Product", "Strategy", "UX"],
         color: "from-purple-500 to-pink-500",
         responsibilities: [
-            { icon: Target, label: "Product Owner", color: "text-red-400" },
-            { icon: Megaphone, label: "Marketing", color: "text-pink-400" },
-            { icon: Layout, label: "Strategy", color: "text-blue-400" },
+            { icon: Layout, label: "Estratégia", color: "text-blue-400" },
             { icon: Palette, label: "UX Design", color: "text-purple-400" },
+            { icon: Target, label: "Gestão de Produto", color: "text-red-400" },
+            { icon: Megaphone, label: "Comunicação", color: "text-pink-400" },
         ]
     },
     {
@@ -42,10 +42,10 @@ const team = [
         tags: ["Full Stack", "QA", "DevOps", "DBA"],
         color: "from-green-500 to-emerald-500",
         responsibilities: [
-            { icon: Code2, label: "Full Stack", color: "text-green-400" },
             { icon: Bug, label: "QA Testing", color: "text-red-400" },
             { icon: Server, label: "DevOps", color: "text-blue-400" },
             { icon: Database, label: "DBA", color: "text-yellow-400" },
+            { icon: Code2, label: "Arquitetura", color: "text-green-400" },
         ]
     },
     {
@@ -53,13 +53,13 @@ const team = [
         role: "Front End & Marketing",
         handle: "@GuilhermefDomingues",
         avatar: "/Guilherme.svg",
-        tags: ["React", "Node.js", "API"],
+        tags: ["React", "Next.js", "TypeScript"],
         color: "from-orange-500 to-red-500",
         responsibilities: [
-            { icon: Code2, label: "Front End", color: "text-orange-400" },
-            { icon: Megaphone, label: "Marketing", color: "text-pink-400" },
             { icon: Palette, label: "UI/UX", color: "text-purple-400" },
             { icon: Layout, label: "React", color: "text-blue-400" },
+            { icon: Code2, label: "Integração", color: "text-orange-400" },
+            { icon: Megaphone, label: "Conteúdo Digital", color: "text-pink-400" },
         ]
     },
     {
@@ -70,10 +70,10 @@ const team = [
         tags: ["Frontend", "Backend", "UI"],
         color: "from-indigo-500 to-blue-500",
         responsibilities: [
-            { icon: Code2, label: "Full Stack", color: "text-indigo-400" },
             { icon: DollarSign, label: "Financeiro", color: "text-green-400" },
             { icon: Headphones, label: "Suporte", color: "text-blue-400" },
             { icon: Server, label: "Backend", color: "text-purple-400" },
+            { icon: Code2, label: "Integração", color: "text-indigo-400" },
         ]
     },
     {
@@ -84,10 +84,10 @@ const team = [
         tags: ["Web", "Mobile", "Cloud"],
         color: "from-teal-500 to-green-500",
         responsibilities: [
-            { icon: Code2, label: "Front End", color: "text-teal-400" },
-            { icon: Layout, label: "Web Dev", color: "text-blue-400" },
-            { icon: Palette, label: "Styling", color: "text-pink-400" },
-            { icon: Server, label: "Integration", color: "text-green-400" },
+            { icon: Layout, label: "Prototipagem", color: "text-blue-400" },
+            { icon: Palette, label: "Estilização", color: "text-pink-400" },
+            { icon: Server, label: "Integração", color: "text-green-400" },
+            { icon: Code2, label: "Performance", color: "text-teal-400" },
         ]
     }
 ];
@@ -98,10 +98,10 @@ export function TechTeam() {
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500">
-                        The Minds Behind Sinout
+                        As Mentes por Trás da Sinout
                     </h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                        A multidisciplinary team of experts building the next generation of web tools.
+                        Uma equipe multidisciplinar de especialistas construindo a próxima geração de ferramentas web.
                     </p>
                 </div>
 
@@ -117,7 +117,7 @@ export function TechTeam() {
                         >
                             <div className="absolute inset-0 bg-white/5 blur-xl rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                            <div className="relative h-full bg-[#1e1e20] rounded-xl p-6 flex flex-col border border-white/10">
+                            <div className="relative h-full bg-card rounded-xl p-6 flex flex-col border border-border">
                                 <div className="flex items-start justify-between mb-6">
                                     <div className="relative">
                                         <div className={`absolute -inset-1 bg-gradient-to-br ${member.color} rounded-full blur opacity-30 group-hover:opacity-60 transition-opacity`} />
@@ -126,32 +126,32 @@ export function TechTeam() {
                                             alt={member.name}
                                             width={96}
                                             height={96}
-                                            className="relative rounded-full border-2 border-white/10 bg-background"
+                                            className="relative rounded-full border-2 border-border bg-background"
                                         />
                                     </div>
                                     <div className="flex gap-2">
-                                        <Link href="#" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
+                                        <Link href="#" className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors text-muted-foreground hover:text-foreground">
                                             <Github className="w-4 h-4" />
                                         </Link>
-                                        <Link href="#" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
+                                        <Link href="#" className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors text-muted-foreground hover:text-foreground">
                                             <Linkedin className="w-4 h-4" />
                                         </Link>
                                     </div>
                                 </div>
 
                                 <div className="mb-4">
-                                    <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
+                                    <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
                                     <p className={`text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r ${member.color}`}>
                                         {member.role}
                                     </p>
-                                    <p className="text-xs text-gray-500 mt-1">{member.handle}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">{member.handle}</p>
                                 </div>
 
-                                <div className="mb-6 p-4 rounded-lg bg-white/5 border border-white/10 flex-grow">
-                                    <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Core Responsibilities</h4>
+                                <div className="mb-6 p-4 rounded-lg bg-muted/50 border border-border flex-grow">
+                                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Responsabilidades Principais</h4>
                                     <div className="grid grid-cols-2 gap-3">
                                         {member.responsibilities.map((item, idx) => (
-                                            <div key={idx} className="flex items-center gap-2 text-sm text-gray-300">
+                                            <div key={idx} className="flex items-center gap-2 text-sm text-foreground">
                                                 <item.icon className={`w-4 h-4 ${item.color}`} /> {item.label}
                                             </div>
                                         ))}
@@ -162,7 +162,7 @@ export function TechTeam() {
                                     {member.tags.map((tag, i) => (
                                         <span
                                             key={i}
-                                            className="px-2 py-1 rounded-md bg-white/5 border border-white/5 text-xs font-medium text-gray-400 group-hover:border-white/20 group-hover:text-gray-300 transition-colors"
+                                            className="px-2 py-1 rounded-md bg-muted border border-border text-xs font-medium text-muted-foreground group-hover:border-border group-hover:text-foreground transition-colors"
                                         >
                                             {tag}
                                         </span>

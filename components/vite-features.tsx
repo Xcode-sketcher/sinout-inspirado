@@ -1,38 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Zap, Box, Lock, Settings, Code, Smartphone } from "lucide-react";
+import { Brain, Users, Zap, Shield, Cog, Heart } from "lucide-react";
 
 const features = [
     {
+        icon: <Brain className="w-6 h-6 text-purple-500" />,
+        title: "Inovação em IA",
+        description: "Desenvolvemos algoritmos avançados de reconhecimento facial para transformar expressões em comunicação verbal acessível."
+    },
+    {
+        icon: <Users className="w-6 h-6 text-blue-500" />,
+        title: "Colaboração Multidisciplinar",
+        description: "Nossa equipe reúne especialistas em IA, engenharia de software e design para criar soluções completas e integradas."
+    },
+    {
         icon: <Zap className="w-6 h-6 text-yellow-500" />,
-        title: "Instant Server Start",
-        description: "On demand file serving over native ESM, no bundling required!"
+        title: "Desenvolvimento Ágil",
+        description: "Utilizamos metodologias ágeis para iterar rapidamente, garantindo que cada versão seja melhor que a anterior."
     },
     {
-        icon: <Box className="w-6 h-6 text-purple-500" />,
-        title: "Lightning Fast HMR",
-        description: "Hot Module Replacement (HMR) that stays fast regardless of app size."
+        icon: <Shield className="w-6 h-6 text-green-500" />,
+        title: "Qualidade e Segurança",
+        description: "Implementamos rigorosos testes e práticas de segurança para garantir produtos confiáveis e protegidos."
     },
     {
-        icon: <Settings className="w-6 h-6 text-blue-500" />,
-        title: "Rich Features",
-        description: "Out-of-the-box support for TypeScript, JSX, CSS and more."
+        icon: <Cog className="w-6 h-6 text-orange-500" />,
+        title: "Integração Tecnológica",
+        description: "Combinamos frontend moderno com backend robusto, criando ecossistemas tecnológicos coesos e escaláveis."
     },
     {
-        icon: <Lock className="w-6 h-6 text-green-500" />,
-        title: "Optimized Build",
-        description: "Pre-configured Rollup build with multi-page and library mode support."
-    },
-    {
-        icon: <Code className="w-6 h-6 text-pink-500" />,
-        title: "Universal Plugins",
-        description: "Rollup-superset plugin interface shared between dev and build."
-    },
-    {
-        icon: <Smartphone className="w-6 h-6 text-orange-500" />,
-        title: "Fully Typed APIs",
-        description: "Flexible programmatic APIs with full TypeScript typing."
+        icon: <Heart className="w-6 h-6 text-pink-500" />,
+        title: "Foco no Usuário",
+        description: "Cada decisão é guiada pela empatia, priorizando a acessibilidade e a experiência de pessoas com necessidades especiais."
     }
 ];
 

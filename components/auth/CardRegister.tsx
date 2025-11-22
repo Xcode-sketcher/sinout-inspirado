@@ -83,14 +83,14 @@ const CardRegister: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-[#1e1e20] relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
             {/* Background Gradients */}
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
 
             <button
                 type="button"
-                className="absolute top-6 left-6 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-6 left-6 p-2 rounded-lg bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => router.back()}
                 aria-label="Voltar"
                 title="Voltar"
@@ -98,7 +98,7 @@ const CardRegister: React.FC = () => {
                 <ArrowLeft className="w-6 h-6" />
             </button>
 
-            <div className="w-full max-w-md bg-[#1e1e20] border border-white/10 rounded-2xl p-8 shadow-2xl relative z-10">
+            <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-2xl relative z-10">
                 <div className="flex justify-center mb-8">
                     <div className="relative w-16 h-16">
                         <Image src="/Logo.svg" alt="Logo" fill className="object-contain" />
@@ -106,13 +106,13 @@ const CardRegister: React.FC = () => {
                 </div>
 
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white mb-2">Criar conta</h1>
-                    <p className="text-gray-400">Preencha os dados para criar sua conta</p>
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Criar conta</h1>
+                    <p className="text-muted-foreground">Preencha os dados para criar sua conta</p>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                     <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium text-gray-300">Nome</label>
+                        <label htmlFor="name" className="text-sm font-medium text-foreground">Nome</label>
                         <input
                             ref={nameRef}
                             id="name"
@@ -121,7 +121,7 @@ const CardRegister: React.FC = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Seu nome completo"
-                            className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.name ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-purple-500'} text-white placeholder-gray-500 outline-none transition-all`}
+                            className={`w-full px-4 py-3 rounded-xl bg-background border ${errors.name ? 'border-red-500/50 focus:border-red-500' : 'border-border focus:border-purple-500'} text-foreground placeholder-muted-foreground outline-none transition-all`}
                             aria-invalid={!!errors.name}
                             required
                         />
@@ -129,7 +129,7 @@ const CardRegister: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium text-gray-300">E-mail</label>
+                        <label htmlFor="email" className="text-sm font-medium text-foreground">E-mail</label>
                         <input
                             ref={emailRef}
                             id="email"
@@ -138,7 +138,7 @@ const CardRegister: React.FC = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="exemplo@email.com"
-                            className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.email ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-purple-500'} text-white placeholder-gray-500 outline-none transition-all`}
+                            className={`w-full px-4 py-3 rounded-xl bg-background border ${errors.email ? 'border-red-500/50 focus:border-red-500' : 'border-border focus:border-purple-500'} text-foreground placeholder-muted-foreground outline-none transition-all`}
                             aria-invalid={!!errors.email}
                             autoComplete="email"
                             required
@@ -147,7 +147,7 @@ const CardRegister: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label htmlFor="password" className="text-sm font-medium text-gray-300">Senha</label>
+                        <label htmlFor="password" className="text-sm font-medium text-foreground">Senha</label>
                         <div className="relative">
                             <input
                                 ref={passwordRef}
@@ -157,14 +157,14 @@ const CardRegister: React.FC = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 placeholder="••••••••"
-                                className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.password ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-purple-500'} text-white placeholder-gray-500 outline-none transition-all pr-12`}
+                                className={`w-full px-4 py-3 rounded-xl bg-background border ${errors.password ? 'border-red-500/50 focus:border-red-500' : 'border-border focus:border-purple-500'} text-foreground placeholder-muted-foreground outline-none transition-all pr-12`}
                                 aria-invalid={!!errors.password}
                                 autoComplete="new-password"
                                 required
                             />
                             <button
                                 type="button"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                 onClick={() => setShowPassword((s) => !s)}
                             >
                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -174,7 +174,7 @@ const CardRegister: React.FC = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-300">Confirmar senha</label>
+                        <label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">Confirmar senha</label>
                         <div className="relative">
                             <input
                                 ref={confirmRef}
@@ -184,13 +184,13 @@ const CardRegister: React.FC = () => {
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
                                 placeholder="••••••••"
-                                className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.confirmPassword ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-purple-500'} text-white placeholder-gray-500 outline-none transition-all pr-12`}
+                                className={`w-full px-4 py-3 rounded-xl bg-background border ${errors.confirmPassword ? 'border-red-500/50 focus:border-red-500' : 'border-border focus:border-purple-500'} text-foreground placeholder-muted-foreground outline-none transition-all pr-12`}
                                 aria-invalid={!!errors.confirmPassword}
                                 required
                             />
                             <button
                                 type="button"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                 onClick={() => setShowConfirmPassword((s) => !s)}
                             >
                                 {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

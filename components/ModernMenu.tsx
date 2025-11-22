@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Home as IconHome, Info as IconInfo, Layers as IconLayers, Mail as IconMail, Github as IconGithub, Linkedin as IconLinkedin, Twitter as IconTwitter, MonitorCog as IconMonitor, Sun as IconSun, Moon as IconMoon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, Home as IconHome, Info as IconInfo, Layers as IconLayers, Mail as IconMail, Github as IconGithub, Linkedin as IconLinkedin, Twitter as IconTwitter, MonitorCog as IconMonitor, Sun as IconSun, Moon as IconMoon, BarChart3 as IconBarChart, HelpCircle as IconHelp, Settings as IconSettings } from "lucide-react";
 import { useTheme } from 'next-themes';
 import Image from "next/image";
 import Link from "next/link";
@@ -60,11 +61,12 @@ const ThemeButtons = () => {
                         key={o.key}
                         onClick={() => setTheme(o.value)}
                         aria-pressed={selected}
+                        suppressHydrationWarning
                         className={
                             `relative flex items-center justify-center rounded-md transition-all h-9 w-9 md:h-8 md:w-8 ` +
                             (selected
                                 ? 'bg-primary text-primary-foreground border-transparent ring-2 ring-primary/50'
-                                : 'bg-muted-foreground/6 text-muted-foreground hover:bg-muted/20 border border-border')
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80 border border-border')
                         }
                     >
                         <IconComp className="h-5 w-5" />
@@ -85,6 +87,34 @@ export function ModernMenu({
     logoUrl = "/Sinout.svg",
 }: ModernMenuProps) {
     const [open, setOpen] = useState(false);
+    const pathname = usePathname();
+
+    // Função para gerar itens do menu baseado na rota atual
+    const getMenuItems = () => {
+        const isHome = pathname === "/";
+        const isEquipe = pathname === "/equipe";
+
+        if (isHome) {
+            return [
+                { label: "Equipe", href: "/equipe" },
+                { label: "Estatística", href: "/estatistica" },
+                { label: "Central de Ajuda", href: "/ajuda" },
+                { label: "Sistema", href: "/sistema" },
+            ];
+        } else if (isEquipe) {
+            return [
+                { label: "Home", href: "/" },
+                { label: "Estatística", href: "/estatistica" },
+                { label: "Central de Ajuda", href: "/ajuda" },
+                { label: "Sistema", href: "/sistema" },
+            ];
+        } else {
+            // Para outras páginas, manter padrão ou ajustar conforme necessário
+            return items;
+        }
+    };
+
+    const menuItems = getMenuItems();
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -102,7 +132,7 @@ export function ModernMenu({
 
                 {/* Menu de navegação para desktop */}
                 <nav className="hidden md:flex items-center space-x-8">
-                    {items.map((item) => (
+                    {menuItems.map((item) => (
                         <Link
                             key={item.label}
                             href={item.href}
@@ -148,7 +178,7 @@ export function ModernMenu({
                             <Menu className="h-6 w-6" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                    <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
                         {/* Cabeçalho do menu mobile */}
                         <SheetHeader className="flex items-center justify-between px-5">
                             <div className="flex items-center gap-3">
@@ -176,17 +206,17 @@ export function ModernMenu({
 
                         {/* Navegação principal do menu mobile */}
                         <nav className="flex flex-col space-y-3 mt-6 px-5">
-                            {items.map((item) => {
+                            {menuItems.map((item) => {
                                 const icon = (() => {
                                     switch (item.label.toLowerCase()) {
-                                        case "home":
+                                        case "equipe/home":
                                             return <IconHome className="h-5 w-5 text-muted-foreground/80" />;
-                                        case "about":
-                                            return <IconInfo className="h-5 w-5 text-muted-foreground/80" />;
-                                        case "services":
-                                            return <IconLayers className="h-5 w-5 text-muted-foreground/80" />;
-                                        case "contact":
-                                            return <IconMail className="h-5 w-5 text-muted-foreground/80" />;
+                                        case "estatística":
+                                            return <IconBarChart className="h-5 w-5 text-muted-foreground/80" />;
+                                        case "central de ajuda":
+                                            return <IconHelp className="h-5 w-5 text-muted-foreground/80" />;
+                                        case "sistema":
+                                            return <IconSettings className="h-5 w-5 text-muted-foreground/80" />;
                                         default:
                                             return <IconHome className="h-5 w-5 text-muted-foreground/80" />;
                                     }
@@ -197,9 +227,9 @@ export function ModernMenu({
                                         key={item.label}
                                         href={item.href}
                                         onClick={() => setOpen(false)}
-                                        className="w-full flex items-center gap-4 px-5 py-3 rounded-xl hover:bg-muted/40 transition-colors border border-border bg-muted/20 transform-gpu motion-safe:transition-transform motion-safe:duration-150 hover:-translate-y-1 hover:shadow-md active:scale-95"
+                                        className="w-full flex items-center gap-4 px-5 py-3 rounded-xl hover:bg-muted/80 transition-colors border border-border bg-card transform-gpu motion-safe:transition-transform motion-safe:duration-150 hover:-translate-y-1 hover:shadow-md active:scale-95"
                                     >
-                                        <div className="bg-muted-foreground/10 p-2 rounded-lg flex items-center justify-center">
+                                        <div className="bg-muted p-2 rounded-lg flex items-center justify-center">
                                             {icon}
                                         </div>
                                         <div className="flex-1 text-left">
@@ -211,7 +241,7 @@ export function ModernMenu({
                                 );
                             })}
                             {/* Seletor de tema integrado no menu */}
-                            <div className="w-2/3 self-center flex items-center justify-center gap-4 px-5 py-3 rounded-xl hover:bg-muted/40 transition-colors border border-border bg-muted/20 mt-2 transform-gpu motion-safe:transition-transform motion-safe:duration-150 hover:-translate-y-1 hover:shadow-md active:scale-95">
+                            <div className="w-2/3 self-center flex items-center justify-center gap-4 px-5 py-3 rounded-xl hover:bg-muted/80 transition-colors border border-border bg-card mt-2 transform-gpu motion-safe:transition-transform motion-safe:duration-150 hover:-translate-y-1 hover:shadow-md active:scale-95">
                                 <div className="flex items-center gap-2">
                                     <ThemeButtons />
                                 </div>
@@ -249,9 +279,9 @@ export function ModernMenu({
                                                     href={social.href}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="w-full flex items-center gap-4 px-5 py-3 rounded-xl border border-border bg-muted/15 hover:shadow-lg transition-transform duration-150 transform-gpu hover:-translate-y-1 active:scale-95 shadow-black/10"
+                                                    className="w-full flex items-center gap-4 px-5 py-3 rounded-xl border border-border bg-card hover:shadow-lg transition-transform duration-150 transform-gpu hover:-translate-y-1 active:scale-95 shadow-sm"
                                                 >
-                                                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-muted-foreground/8 border border-border p-2">
+                                                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-muted border border-border p-2">
                                                         {icon}
                                                     </div>
                                                     <div className="flex-1 pr-2">
@@ -262,21 +292,6 @@ export function ModernMenu({
                                                 </Link>
                                             );
                                         })}
-                                    </div>
-
-                                    {/* Badges adicionais para links sociais */}
-                                    <div className="mt-4 flex flex-wrap gap-3 justify-center">
-                                        {socialItems.map((social) => (
-                                            <Link
-                                                key={social.label + "-badge"}
-                                                href={social.href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="px-3 py-1.5 rounded-full border border-border bg-muted/10 hover:bg-muted/20 transition-colors text-xs"
-                                            >
-                                                {social.label}
-                                            </Link>
-                                        ))}
                                     </div>
                                 </div>
                             </div>

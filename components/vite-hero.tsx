@@ -17,8 +17,8 @@ export function ViteHero() {
                             transition={{ duration: 0.5 }}
                             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400"
                         >
-                            Next Generation<br />
-                            Frontend Tooling
+                            Transformando<br />
+                            Conceitos em Produtos
                         </motion.h1>
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
@@ -26,7 +26,7 @@ export function ViteHero() {
                             transition={{ duration: 0.5, delay: 0.1 }}
                             className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto md:mx-0"
                         >
-                            Get ready for a development environment that can finally keep up with you.
+                            Conheça como nossa equipe transforma ideias inovadoras em soluções tecnológicas reais e acessíveis.
                         </motion.p>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -38,14 +38,14 @@ export function ViteHero() {
                                 href="/docs"
                                 className="px-8 py-3 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-medium transition-colors text-lg"
                             >
-                                Get Started
+                                Conheça a Equipe
                             </Link>
                             <Link
                                 href="https://github.com/vitejs/vite"
                                 target="_blank"
                                 className="px-8 py-3 rounded-full bg-secondary/20 hover:bg-secondary/30 text-foreground font-medium transition-colors text-lg flex items-center gap-2"
                             >
-                                Why Vite? <ArrowRight className="w-4 h-4" />
+                                Nossa Metodologia <ArrowRight className="w-4 h-4" />
                             </Link>
                         </motion.div>
                     </div>
