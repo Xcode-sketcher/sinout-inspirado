@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Heart, Lightbulb, Target, Rocket, Users, Code, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { ModernMenu } from "@/components/layout/Header";
 
 const JourneyStep = ({
     step,
@@ -71,8 +72,17 @@ const FloatingElement = ({ children, delay = 0 }: { children: React.ReactNode; d
 );
 
 export default function SobrePage() {
+    // Configuração dos links sociais
+    const socialItems = [
+        { label: "GitHub", href: "https://github.com" },
+        { label: "Twitter", href: "https://twitter.com" },
+        { label: "Discord", href: "https://discord.com" },
+    ];
+
     return (
         <div className="min-h-screen bg-background">
+            {/* Menu de navegação */}
+            <ModernMenu items={[]} socialItems={socialItems} />
             {/* Hero Section */}
             <section className="relative py-20 overflow-hidden">
                 {/* Background Effects */}
