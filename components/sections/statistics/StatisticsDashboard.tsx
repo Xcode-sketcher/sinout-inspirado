@@ -1,79 +1,255 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PatientHeader } from "./PatientHeader";
 import { MetricsGrid } from "./MetricsGrid";
 import { VolumeChart } from "./VolumeChart";
 import { EmotionsPieChart } from "./EmotionsPieChart";
 import { RecentActivityList } from "./RecentActivityList";
 import { TrendsAnalysis } from "./TrendsAnalysis";
-import { mockPatient, mockRules } from "./mock-data";
-import { HistoryItem } from "./types";
+import { HistoryItem, Rule, Patient } from "./types";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { motion } from "framer-motion";
+import api from "@/lib/api";
 
-// Generate random mock history data on client-side to avoid hydration mismatch
-const generateRandomMockHistory = (): HistoryItem[] => {
-    const items: HistoryItem[] = [];
-    const now = new Date();
-    const emotionsList = ['neutral', 'happy', 'sad', 'angry', 'fear', 'surprise', 'disgust'];
+/**
+ * Interface para itens de histórico retornados pela API
+ * Representa um registro de detecção emocional com dados brutos da API
+ */
+interface ApiHistoryItem {
+    id: string;
+    patientId: number;
+    patientName: string;
+    timestamp: string;
+    emotionsDetected: Record<string, number>;
+    dominantEmotion: string;
+    percentage: number;
+    message: string | null;
+    ruleId: number | null;
+}
 
-    for (let i = 0; i < 50; i++) {
-        const time = new Date(now.getTime() - Math.random() * 24 * 60 * 60 * 1000);
-        const dominant = emotionsList[Math.floor(Math.random() * emotionsList.length)];
-        const percent = 50 + Math.random() * 50;
+/**
+ * Interface para regras retornadas pela API
+ * Define as regras de mapeamento emocional com configurações de prioridade
+ */
+interface ApiRuleItem {
+    id: string;
+    userId: number;
+    emotion: string;
+    intensityLevel: string;
+    minPercentage: number;
+    message: string;
+    priority: number;
+    active: boolean;
+    createdAt: string;
+    updatedAt: string | null;
+}
 
-        items.push({
-            _id: `hist_${i}`,
-            id_usuario: 1,
-            nome_paciente: "Dashboard",
-            timestamp: time.toISOString(),
-            emocoes_detectadas: {
-                angry: dominant === 'angry' ? percent : Math.random() * 10,
-                disgust: dominant === 'disgust' ? percent : Math.random() * 10,
-                fear: dominant === 'fear' ? percent : Math.random() * 10,
-                happy: dominant === 'happy' ? percent : Math.random() * 10,
-                neutral: dominant === 'neutral' ? percent : Math.random() * 10,
-                sad: dominant === 'sad' ? percent : Math.random() * 10,
-                surprise: dominant === 'surprise' ? percent : Math.random() * 10,
-            },
-            emocao_dominante: dominant,
-            percentual_dominante: percent,
-            mensagem_disparada: Math.random() > 0.7 ? "Mensagem automática disparada" : null,
-            regra_acionada_id: Math.random() > 0.7 ? 1 : null
-        });
-    }
-    return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-};
-
+/**
+ * Dashboard principal de estatísticas do sistema Sinout
+ *
+ * Componente central que orquestra a exibição de dados estatísticos do paciente,
+ * incluindo métricas em tempo real, gráficos de volume, análise de tendências,
+ * distribuição emocional e lista de atividades recentes.
+ *
+ * Funcionalidades principais:
+ * - Filtragem temporal de dados (6h, 12h, 24h)
+ * - Integração com API para busca de histórico, regras e dados do paciente
+ * - Mapeamento e validação de dados da API para formato interno
+ * - Estados de carregamento e tratamento de erros
+ * - Layout responsivo com grid adaptativo
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <StatisticsDashboard />
+ * ```
+ *
+ * @returns {JSX.Element} Dashboard completo com todas as seções estatísticas
+ */
 export function StatisticsDashboard() {
+    // Estados para controle de filtro temporal (6, 12 ou 24 horas)
     const [timeFilter, setTimeFilter] = useState<number>(24);
-    const [history, setHistory] = useState<HistoryItem[]>([]);
+
+    // Estados para armazenamento de dados do histórico emocional
     const [filteredHistory, setFilteredHistory] = useState<HistoryItem[]>([]);
 
-    // Generate random mock data on client-side mount
-    useEffect(() => {
-        const randomHistory = generateRandomMockHistory();
-        setHistory(randomHistory);
-        setFilteredHistory(randomHistory);
-    }, []);
+    // Estado para regras de mapeamento emocional ativas
+    const [rules, setRules] = useState<Rule[]>([]);
 
+    // Estado para dados do paciente atual
+    const [patient, setPatient] = useState<Patient | null>(null);
+
+    // Estados para controle de UI (carregamento e erros)
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    /**
+     * Função assíncrona para buscar dados da API
+     * Executa múltiplas requisições em paralelo e processa os dados retornados
+     *
+     * Processamento realizado:
+     * 1. Busca histórico emocional filtrado por tempo
+     * 2. Busca regras de mapeamento ativas do usuário
+     * 3. Busca dados do paciente autenticado
+     * 4. Mapeia dados da API para formato interno do componente
+     * 5. Filtra entradas inválidas e calcula percentuais quando necessário
+     */
+    const fetchData = useCallback(async () => {
+        try {
+            // Executa requisições em paralelo para otimizar performance
+            const [historyResponse, rulesResponse, patientResponse] = await Promise.all([
+                api.get(`/api/history/my-history?hours=${timeFilter}`),
+                api.get('/api/emotion-mappings/my-rules'),
+                api.get('/api/auth/me')
+            ]);
+
+            // Processamento do histórico emocional
+            const rawHistory = historyResponse.data;
+            let historyArray: HistoryItem[] = [];
+
+            /**
+             * Função auxiliar para mapear item da API para formato interno
+             * Realiza cálculo de percentual dominante quando necessário
+             */
+            const mapHistoryItem = (item: ApiHistoryItem): HistoryItem => {
+                // Calcula percentual se não fornecido pela API
+                let percentage = item.percentage;
+                if (percentage === undefined || percentage === null) {
+                    if (item.emotionsDetected && item.dominantEmotion) {
+                        percentage = item.emotionsDetected[item.dominantEmotion] || 0;
+                    } else {
+                        percentage = 0;
+                    }
+                }
+
+                return {
+                    _id: item.id,
+                    id_usuario: item.patientId,
+                    nome_paciente: item.patientName,
+                    timestamp: item.timestamp,
+                    emocoes_detectadas: item.emotionsDetected,
+                    emocao_dominante: item.dominantEmotion?.toLowerCase() || 'neutral',
+                    percentual_dominante: percentage,
+                    mensagem_disparada: item.message,
+                    regra_acionada_id: item.ruleId
+                };
+            };
+
+            // Processa diferentes formatos possíveis de resposta da API
+            if (Array.isArray(rawHistory)) {
+                historyArray = rawHistory.map(mapHistoryItem);
+            } else if (rawHistory && Array.isArray((rawHistory as { data?: ApiHistoryItem[] }).data)) {
+                historyArray = (rawHistory as { data?: ApiHistoryItem[] }).data!.map(mapHistoryItem);
+            } else if (rawHistory && Array.isArray((rawHistory as { items?: ApiHistoryItem[] }).items)) {
+                historyArray = (rawHistory as { items?: ApiHistoryItem[] }).items!.map(mapHistoryItem);
+            } else {
+                console.error("Unexpected history response format", rawHistory);
+            }
+
+            // Filtra entradas inválidas (sem dados de emoções detectadas)
+            historyArray = historyArray.filter(item =>
+                item &&
+                item.emocoes_detectadas && typeof item.emocoes_detectadas === "object"
+            );
+
+            // Atualiza estados com dados processados
+            setFilteredHistory(historyArray);
+
+            // Processamento das regras de mapeamento emocional
+            const rawRules = rulesResponse.data;
+            let rulesArray: Rule[] = [];
+
+            /**
+             * Função auxiliar para mapear regra da API para formato interno
+             * Normaliza nomes de emoções para minúsculas
+             */
+            const mapRuleItem = (item: ApiRuleItem): Rule => ({
+                _id: item.id,
+                id_usuario: item.userId,
+                emocao: item.emotion?.toLowerCase() || 'neutral',
+                nivel_intensidade: item.intensityLevel,
+                percentual_minimo: item.minPercentage,
+                mensagem: item.message,
+                prioridade: item.priority,
+                ativo: item.active,
+                data_criacao: item.createdAt,
+                data_atualizacao: item.updatedAt
+            });
+
+            // Processa diferentes formatos de resposta para regras
+            if (Array.isArray(rawRules)) {
+                rulesArray = rawRules.map(mapRuleItem);
+            } else if (rawRules && Array.isArray((rawRules as { data?: ApiRuleItem[] }).data)) {
+                rulesArray = (rawRules as { data?: ApiRuleItem[] }).data!.map(mapRuleItem);
+            } else {
+                console.error("Unexpected rules response format", rawRules);
+            }
+
+            setRules(rulesArray);
+
+            // Processamento dos dados do paciente
+            const patientData = patientResponse.data;
+            if (patientData) {
+                // Mapeia dados do paciente com fallbacks para diferentes formatos de API
+                const mappedPatient: Patient = {
+                    _id: patientData.id || patientData._id || patientData.patientId,
+                    nome: patientData.name || patientData.nome || patientData.patientName || patientData.username || patientData.email,
+                    id_cuidador: patientData.caregiverId || patientData.id_cuidador || patientData.caregiver_id || 1, // fallback
+                    data_cadastro: patientData.createdAt || patientData.data_cadastro || patientData.created_at || new Date().toISOString(),
+                    status: patientData.active !== undefined ? patientData.active : (patientData.status !== undefined ? patientData.status : true),
+                    informacoes_adicionais: patientData.additionalInfo || patientData.informacoes_adicionais || patientData.bio || null,
+                    foto_perfil: patientData.profilePicture || patientData.foto_perfil || patientData.avatar || null,
+                    criado_por: patientData.createdBy || patientData.criado_por || 'user'
+                };
+                setPatient(mappedPatient);
+            }
+
+            // Limpa estado de erro em caso de sucesso
+            setError(null);
+        } catch (err: unknown) {
+            // Tratamento de erros com logging e atualização de estados
+            const error = err as Error;
+            console.error("Failed to fetch data", err);
+            setError(error?.message || "Erro ao carregar dados");
+            setFilteredHistory([]);
+            setRules([]);
+            setPatient(null);
+        } finally {
+            // Garante que loading seja desativado independentemente do resultado
+            setLoading(false);
+        }
+    }, [timeFilter]);
+
+    // Hook useEffect para buscar dados quando filtro temporal muda
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    /**
+     * Manipulador para mudança de filtro temporal
+     * Atualiza o estado timeFilter que dispara nova busca de dados
+     *
+     * @param {number} hours - Número de horas para filtrar (6, 12 ou 24)
+     */
     const handleFilterChange = (hours: number) => {
         setTimeFilter(hours);
-        const now = new Date();
-        const cutoff = new Date(now.getTime() - hours * 60 * 60 * 1000);
-        setFilteredHistory(history.filter(item => new Date(item.timestamp) >= cutoff));
     };
+
+    // Debug logging para desenvolvimento
+    console.log('Filtered History:', filteredHistory);
 
     return (
         <div className="min-h-screen bg-background p-4 md:p-8 space-y-8">
-            <PatientHeader patient={mockPatient} />
+            {/* Renderiza cabeçalho do paciente se dados estiverem disponíveis */}
+            {patient && <PatientHeader patient={patient} />}
 
+            {/* Seção de controles de filtro temporal */}
             <div className="flex justify-end mb-4">
                 <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-lg border border-border">
+                    {/* Ícone de filtro para identificação visual */}
                     <Filter className="w-4 h-4 ml-2 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground mr-2">Filtrar:</span>
+                    {/* Botões de filtro para diferentes períodos temporais */}
                     {[6, 12, 24].map((hours) => (
                         <Button
                             key={hours}

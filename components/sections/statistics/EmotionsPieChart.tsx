@@ -35,7 +35,8 @@ export function EmotionsPieChart({ history }: EmotionsPieChartProps) {
     const data = useMemo(() => {
         const counts: Record<string, number> = {};
         history.forEach(item => {
-            counts[item.emocao_dominante] = (counts[item.emocao_dominante] || 0) + 1;
+            const emotionKey = item.emocao_dominante.toLowerCase();
+            counts[emotionKey] = (counts[emotionKey] || 0) + 1;
         });
 
         return Object.entries(counts).map(([key, value]) => ({
