@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { Heart, Lightbulb, Target, Rocket, Users, Code, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ModernMenu } from "@/components/layout/Header";
+import { OrbitalAnimation } from "@/components/sections/sobre/OrbitalAnimation";
 
 /**
  * Props do componente JourneyStep
@@ -171,16 +172,9 @@ export default function SobrePage() {
                         className="text-center max-w-4xl mx-auto"
                     >
                         {/* Ícone animado de introdução */}
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                            className="inline-block mb-6"
-                        >
-                            <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl">
-                                <Sparkles className="w-10 h-10 text-white" />
-                            </div>
-                        </motion.div>
+                        <div className="flex justify-center mb-8">
+                            <OrbitalAnimation size="lg" autoPlay={true} />
+                        </div>
 
                         {/* Título principal com gradiente */}
                         <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 mb-6">
