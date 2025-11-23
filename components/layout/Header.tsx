@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, Home as IconHome, Info as IconInfo, Layers as IconLayers, Mail as IconMail, Github as IconGithub, Linkedin as IconLinkedin, Twitter as IconTwitter, MonitorCog as IconMonitor, Sun as IconSun, Moon as IconMoon, BarChart3 as IconBarChart, HelpCircle as IconHelp, Settings as IconSettings, CreditCard as IconCreditCard } from "lucide-react";
+import { Menu, Home as IconHome, Info as IconInfo, Layers as IconLayers, Mail as IconMail, Github as IconGithub, Linkedin as IconLinkedin, Twitter as IconTwitter, MonitorCog as IconMonitor, Sun as IconSun, Moon as IconMoon, BarChart3 as IconBarChart, HelpCircle as IconHelp, Settings as IconSettings, CreditCard as IconCreditCard, User, LogOut, BarChart } from "lucide-react";
 import { useTheme } from 'next-themes';
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import {
     Sheet,
     SheetContent,
@@ -88,6 +89,7 @@ export function ModernMenu({
 }: ModernMenuProps) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
+    const { user, logout } = useAuth();
 
     // Função para gerar itens do menu baseado na rota atual
     const getMenuItems = () => {
@@ -103,7 +105,6 @@ export function ModernMenu({
                 { label: "Planos", href: "/#pagamento" },
                 { label: "Estatística", href: "/estatistica" },
                 { label: "Central de Ajuda", href: "/ajuda" },
-                { label: "Sistema", href: "/sistema" },
             ];
         } else if (isEquipe) {
             return [
@@ -112,7 +113,6 @@ export function ModernMenu({
                 { label: "Planos", href: "/#pagamento" },
                 { label: "Estatística", href: "/estatistica" },
                 { label: "Central de Ajuda", href: "/ajuda" },
-                { label: "Sistema", href: "/sistema" },
             ];
         } else if (isEstatistica) {
             return [
@@ -121,7 +121,6 @@ export function ModernMenu({
                 { label: "Equipe", href: "/equipe" },
                 { label: "Planos", href: "/#pagamento" },
                 { label: "Central de Ajuda", href: "/ajuda" },
-                { label: "Sistema", href: "/sistema" },
             ];
         } else if (isSobre) {
             return [
@@ -130,7 +129,6 @@ export function ModernMenu({
                 { label: "Planos", href: "/#pagamento" },
                 { label: "Estatística", href: "/estatistica" },
                 { label: "Central de Ajuda", href: "/ajuda" },
-                { label: "Sistema", href: "/sistema" },
             ];
         } else {
             // Para outras páginas, manter padrão ou ajustar conforme necessário
@@ -182,11 +180,29 @@ export function ModernMenu({
                     ))}
                     <div className="border-l border-border pl-4 ml-4 flex items-center gap-4">
                         <ThemeButtons />
-                        <Link href="/login">
-                            <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground border-0">
-                                Login
-                            </Button>
-                        </Link>
+                        {user ? (
+                            <div className="flex items-center gap-2">
+                                <Link href="/estatistica">
+                                    <Button variant="outline" size="sm">
+                                        <IconSettings className="w-4 h-4 mr-2" />
+                                        Sistema
+                                    </Button>
+                                </Link>
+                                <Button variant="ghost" size="sm" onClick={logout}>
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    Logout
+                                </Button>
+                                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold">
+                                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                            </div>
+                        ) : (
+                            <Link href="/login">
+                                <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground border-0">
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
 
@@ -221,11 +237,35 @@ export function ModernMenu({
                         </SheetHeader>
 
                         <div className="px-5 mt-6">
-                            <Link href="/login" onClick={() => setOpen(false)}>
-                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 h-12 text-lg font-semibold">
-                                    Login
-                                </Button>
-                            </Link>
+                            {user ? (
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold">
+                                            {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold">{user.name || 'Usuário'}</p>
+                                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <Link href="/estatistica" onClick={() => setOpen(false)}>
+                                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 h-12 text-lg font-semibold">
+                                            <IconSettings className="w-5 h-5 mr-2" />
+                                            Sistema
+                                        </Button>
+                                    </Link>
+                                    <Button onClick={() => { logout(); setOpen(false); }} variant="outline" className="w-full h-12 text-lg font-semibold">
+                                        <LogOut className="w-5 h-5 mr-2" />
+                                        Logout
+                                    </Button>
+                                </div>
+                            ) : (
+                                <Link href="/login" onClick={() => setOpen(false)}>
+                                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 h-12 text-lg font-semibold">
+                                        Login
+                                    </Button>
+                                </Link>
+                            )}
                         </div>
 
                         {/* Navegação principal do menu mobile */}
@@ -244,8 +284,6 @@ export function ModernMenu({
                                             return <IconBarChart className="h-5 w-5 text-muted-foreground/80" />;
                                         case "central de ajuda":
                                             return <IconHelp className="h-5 w-5 text-muted-foreground/80" />;
-                                        case "sistema":
-                                            return <IconSettings className="h-5 w-5 text-muted-foreground/80" />;
                                         default:
                                             return <IconHome className="h-5 w-5 text-muted-foreground/80" />;
                                     }

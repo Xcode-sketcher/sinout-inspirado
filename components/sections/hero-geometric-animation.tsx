@@ -1,11 +1,39 @@
 "use client";
 
+/**
+ * Componente HeroGeometricAnimation
+ *
+ * Animação de fundo interativa para seções hero com elementos geométricos
+ * que respondem ao movimento do mouse. Cria uma atmosfera visual dinâmica
+ * com orbes de gradiente, formas geométricas animadas e elementos abstratos
+ * que simulam código flutuante.
+ *
+ * Funcionalidades principais:
+ * - Rastreamento de movimento do mouse em tempo real
+ * - Orbes de gradiente com movimento parallax responsivo
+ * - Formas geométricas SVG animadas (hexágonos, círculos)
+ * - Grade de linhas animadas com movimento orgânico
+ * - Elementos de código abstratos flutuantes
+ * - Efeitos de blur e blend modes para profundidade visual
+ * - Design responsivo e otimizado para performance
+ */
+
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+/**
+ * Componente HeroGeometricAnimation
+ * Renderiza uma animação de fundo interativa com elementos geométricos
+ * que seguem o movimento do cursor do mouse
+ */
 export const HeroGeometricAnimation = () => {
+    // Estado para armazenar a posição normalizada do mouse (0-1)
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+    /**
+     * Efeito para rastrear o movimento do mouse
+     * Converte coordenadas absolutas em coordenadas normalizadas
+     */
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             setMousePosition({
@@ -20,7 +48,7 @@ export const HeroGeometricAnimation = () => {
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-            {/* Gradient Orbs */}
+            {/* Orbes de gradiente animados que seguem o mouse */}
             <motion.div
                 animate={{
                     x: mousePosition.x * 20,
@@ -43,7 +71,7 @@ export const HeroGeometricAnimation = () => {
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/20 rounded-full blur-[120px] mix-blend-screen"
             />
 
-            {/* Geometric Shapes */}
+            {/* Formas geométricas SVG com animações complexas */}
             <svg className="absolute inset-0 w-full h-full opacity-30">
                 <defs>
                     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -52,7 +80,7 @@ export const HeroGeometricAnimation = () => {
                     </linearGradient>
                 </defs>
 
-                {/* Floating Hexagon */}
+                {/* Hexágono flutuante com movimento complexo */}
                 <motion.path
                     d="M50 0 L93.3 25 L93.3 75 L50 100 L6.7 75 L6.7 25 Z"
                     fill="url(#grad1)"
@@ -74,7 +102,7 @@ export const HeroGeometricAnimation = () => {
                     style={{ x: mousePosition.x * 30, y: mousePosition.y * 30 }}
                 />
 
-                {/* Floating Circle Outline */}
+                {/* Círculo com contorno tracejado em rotação */}
                 <motion.circle
                     cx="80%"
                     cy="20%"
@@ -94,7 +122,7 @@ export const HeroGeometricAnimation = () => {
                     }}
                 />
 
-                {/* Grid Lines */}
+                {/* Grade de linhas animadas com movimento orgânico */}
                 <motion.g
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.2 }}
@@ -123,7 +151,7 @@ export const HeroGeometricAnimation = () => {
                 </motion.g>
             </svg>
 
-            {/* Floating Code Snippets (Abstract) */}
+            {/* Elementos abstratos simulando trechos de código flutuantes */}
             <div className="absolute inset-0">
                 {[
                     { left: 10, top: 20, delay: 0 },
@@ -155,6 +183,7 @@ export const HeroGeometricAnimation = () => {
                             top: `${pos.top}%`,
                         }}
                     >
+                        {/* Elementos visuais simulando linhas de código */}
                         <div className="h-2 w-20 bg-muted-foreground/20 rounded mb-2" />
                         <div className="h-2 w-12 bg-muted-foreground/10 rounded" />
                     </motion.div>

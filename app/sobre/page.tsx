@@ -1,10 +1,49 @@
 "use client";
 
+/**
+ * Página Sobre - Sinout
+ *
+ * Esta página apresenta a história, jornada e valores da empresa Sinout.
+ * Apresenta de forma interativa a evolução do projeto desde sua concepção
+ * até o impacto atual, utilizando animações e design moderno.
+ *
+ * Funcionalidades principais:
+ * - Seção hero com introdução da história
+ * - Timeline interativa da jornada de desenvolvimento
+ * - Apresentação dos valores fundamentais
+ * - Call-to-action para engajamento do usuário
+ */
+
 import { motion } from "framer-motion";
 import { Heart, Lightbulb, Target, Rocket, Users, Code, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ModernMenu } from "@/components/layout/Header";
 
+/**
+ * Props do componente JourneyStep
+ */
+interface JourneyStepProps {
+    /** Número do passo na jornada */
+    step: number;
+    /** Título do passo */
+    title: string;
+    /** Descrição detalhada do passo */
+    description: string;
+    /** Componente do ícone a ser exibido */
+    icon: any;
+    /** Classe CSS para cor de fundo do ícone */
+    color: string;
+    /** Atraso da animação em segundos */
+    delay?: number;
+}
+
+/**
+ * Componente JourneyStep
+ *
+ * Representa um passo individual na timeline da jornada da empresa.
+ * Inclui animações de entrada, conexão visual com outros passos e
+ * layout responsivo com ícone, título e descrição.
+ */
 const JourneyStep = ({
     step,
     title,
@@ -12,22 +51,19 @@ const JourneyStep = ({
     icon: Icon,
     color,
     delay = 0
-}: {
-    step: number;
-    title: string;
-    description: string;
-    icon: any;
-    color: string;
-    delay?: number;
-}) => {
-    // Extract color classes for connection lines
+}: JourneyStepProps) => {
+    /**
+     * Determina a cor do gradiente da linha de conexão baseada na cor do ícone
+     * @param colorClass - Classe CSS da cor do ícone
+     * @returns Classe CSS do gradiente para a linha de conexão
+     */
     const getConnectionColor = (colorClass: string) => {
         if (colorClass.includes('red-500')) return 'from-red-500 to-pink-500';
         if (colorClass.includes('purple-500')) return 'from-purple-500 to-indigo-500';
         if (colorClass.includes('blue-500')) return 'from-blue-500 to-cyan-500';
         if (colorClass.includes('emerald-500')) return 'from-emerald-500 to-teal-500';
         if (colorClass.includes('orange-500')) return 'from-orange-500 to-red-500';
-        return 'from-purple-500 to-blue-500'; // fallback
+        return 'from-purple-500 to-blue-500';
     };
 
     return (
@@ -38,14 +74,13 @@ const JourneyStep = ({
             transition={{ duration: 0.6, delay }}
             className="relative"
         >
-            {/* Connection Line */}
+            {/* Linha de conexão visual entre os passos */}
             {step > 1 && (
-                // connection line sits slightly to the right of the icon so the icon and "Passo" text don't overlap
                 <div className={`absolute left-28 top-8 w-0.5 h-16 bg-gradient-to-b ${getConnectionColor(color)} hidden md:block z-0`} />
             )}
 
             <div className="flex items-start gap-12">
-                {/* Step Number & Icon */}
+                {/* Contêiner do número do passo e ícone */}
                 <div className="flex-shrink-0 relative">
                     <div className={`w-20 h-20 rounded-2xl ${color} flex items-center justify-center shadow-lg relative z-20`}>
                         <div className="absolute inset-0 rounded-2xl bg-white/20 animate-pulse" />
@@ -56,7 +91,7 @@ const JourneyStep = ({
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Conteúdo do passo */}
                 <div className="flex-1 pb-16 pt-4 pl-4">
                     <h3 className="text-2xl font-bold text-foreground mb-4">{title}</h3>
                     <p className="text-muted-foreground text-lg leading-relaxed">{description}</p>
@@ -66,7 +101,23 @@ const JourneyStep = ({
     );
 };
 
-const FloatingElement = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
+/**
+ * Props do componente FloatingElement
+ */
+interface FloatingElementProps {
+    /** Elementos filhos a serem animados */
+    children: React.ReactNode;
+    /** Atraso da animação em segundos */
+    delay?: number;
+}
+
+/**
+ * Componente FloatingElement
+ *
+ * Aplica animação de flutuação suave aos elementos filhos.
+ * Utilizado para criar movimento sutil em ícones e elementos decorativos.
+ */
+const FloatingElement = ({ children, delay = 0 }: FloatingElementProps) => (
     <motion.div
         animate={{
             y: [0, -10, 0],
@@ -82,8 +133,18 @@ const FloatingElement = ({ children, delay = 0 }: { children: React.ReactNode; d
     </motion.div>
 );
 
+/**
+ * Componente principal da página Sobre
+ *
+ * Renderiza a página completa "Sobre nós" com todas as seções:
+ * - Menu de navegação
+ * - Seção hero com introdução
+ * - Timeline da jornada
+ * - Valores da empresa
+ * - Call-to-action
+ */
 export default function SobrePage() {
-    // Configuração dos links sociais
+    // Configuração dos links das redes sociais para o menu
     const socialItems = [
         { label: "GitHub", href: "https://github.com" },
         { label: "Twitter", href: "https://twitter.com" },
@@ -92,11 +153,12 @@ export default function SobrePage() {
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Menu de navegação */}
+            {/* Menu de navegação moderno */}
             <ModernMenu items={[]} socialItems={socialItems} />
-            {/* Hero Section */}
+
+            {/* Seção Hero - Introdução da história */}
             <section className="relative py-20 overflow-hidden">
-                {/* Background Effects */}
+                {/* Efeitos de fundo para criar atmosfera */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5" />
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
@@ -108,6 +170,7 @@ export default function SobrePage() {
                         transition={{ duration: 0.8 }}
                         className="text-center max-w-4xl mx-auto"
                     >
+                        {/* Ícone animado de introdução */}
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -119,10 +182,12 @@ export default function SobrePage() {
                             </div>
                         </motion.div>
 
+                        {/* Título principal com gradiente */}
                         <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 mb-6">
                             Nossa História
                         </h1>
 
+                        {/* Subtítulo descritivo */}
                         <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                             Uma jornada de empatia que se transformou em inovação tecnológica.
                             Descubra como o Sinout nasceu da necessidade de conectar pessoas.
@@ -131,7 +196,7 @@ export default function SobrePage() {
                 </div>
             </section>
 
-            {/* Journey Section */}
+            {/* Seção da Jornada - Timeline interativa */}
             <section className="py-20 relative">
                 <div className="container mx-auto px-4">
                     <motion.div
@@ -149,12 +214,13 @@ export default function SobrePage() {
                         </p>
                     </motion.div>
 
-                    {/* Journey Steps */}
+                    {/* Container da timeline com passos da jornada */}
                     <div className="max-w-4xl mx-auto relative">
-                        {/* Central Timeline Line (moved to the right so icons & labels won't sit on top of it) */}
+                        {/* Linha central da timeline */}
                         <div className="absolute left-28 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-300 hidden md:block opacity-30 z-0" />
 
                         <div className="space-y-16">
+                            {/* Passo 1: Nascimento da ideia */}
                             <JourneyStep
                                 step={1}
                                 title="O Nascimento da Ideia"
@@ -164,6 +230,7 @@ export default function SobrePage() {
                                 delay={0.1}
                             />
 
+                            {/* Passo 2: Pesquisa e empatia profunda */}
                             <JourneyStep
                                 step={2}
                                 title="Pesquisa e Empatia Profunda"
@@ -173,6 +240,7 @@ export default function SobrePage() {
                                 delay={0.2}
                             />
 
+                            {/* Passo 3: Planejamento estruturado */}
                             <JourneyStep
                                 step={3}
                                 title="Planejamento Estruturado"
@@ -182,6 +250,7 @@ export default function SobrePage() {
                                 delay={0.3}
                             />
 
+                            {/* Passo 4: Desenvolvimento técnico */}
                             <JourneyStep
                                 step={4}
                                 title="Desenvolvimento Técnico"
@@ -191,6 +260,7 @@ export default function SobrePage() {
                                 delay={0.4}
                             />
 
+                            {/* Passo 5: Lançamento e impacto */}
                             <JourneyStep
                                 step={5}
                                 title="Lançamento e Impacto"
@@ -204,7 +274,7 @@ export default function SobrePage() {
                 </div>
             </section>
 
-            {/* Values Section */}
+            {/* Seção de Valores - Apresentação dos princípios fundamentais */}
             <section className="py-20 bg-muted/20">
                 <div className="container mx-auto px-4">
                     <motion.div
@@ -222,6 +292,7 @@ export default function SobrePage() {
                         </p>
                     </motion.div>
 
+                    {/* Grid de valores com animações */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             {
@@ -251,11 +322,14 @@ export default function SobrePage() {
                                 transition={{ duration: 0.6, delay: index * 0.2 }}
                                 className="text-center p-8 rounded-2xl bg-card border border-border hover:border-purple-500/50 transition-all duration-300"
                             >
+                                {/* Elemento flutuante com ícone animado */}
                                 <FloatingElement delay={index * 0.5}>
                                     <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-r ${value.color} flex items-center justify-center shadow-lg`}>
                                         <value.icon className="w-8 h-8 text-white" />
                                     </div>
                                 </FloatingElement>
+
+                                {/* Conteúdo do valor */}
                                 <h3 className="text-xl font-bold text-foreground mb-4">{value.title}</h3>
                                 <p className="text-muted-foreground">{value.description}</p>
                             </motion.div>
@@ -264,7 +338,7 @@ export default function SobrePage() {
                 </div>
             </section>
 
-            {/* Call to Action */}
+            {/* Seção Call-to-Action - Engajamento do usuário */}
             <section className="py-20">
                 <div className="container mx-auto px-4">
                     <motion.div
@@ -281,7 +355,9 @@ export default function SobrePage() {
                             Junte-se a nós nesta missão de transformar vidas através da tecnologia acessível
                         </p>
 
+                        {/* Botões de ação */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                            {/* Botão principal para planos */}
                             <Link href="/#pagamento">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
@@ -293,6 +369,7 @@ export default function SobrePage() {
                                 </motion.button>
                             </Link>
 
+                            {/* Botão secundário para equipe */}
                             <Link href="/equipe">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}

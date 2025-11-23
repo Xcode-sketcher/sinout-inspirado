@@ -1,19 +1,41 @@
 "use client"
 
+/**
+ * Componentes Dialog
+ *
+ * Sistema de modal/dialog acessível baseado no Radix UI Dialog.
+ * Fornece uma interface consistente para criação de modais com
+ * foco na acessibilidade, animações suaves e experiência do usuário.
+ *
+ * Componentes incluídos:
+ * - Dialog: Container raiz do modal
+ * - DialogTrigger: Elemento que abre o modal
+ * - DialogContent: Conteúdo principal do modal com overlay
+ * - DialogHeader: Cabeçalho do modal
+ * - DialogTitle: Título do modal
+ * - DialogDescription: Descrição do modal
+ * - DialogFooter: Rodapé com ações
+ * - DialogClose: Botão para fechar o modal
+ * - DialogOverlay: Overlay escuro de fundo
+ * - DialogPortal: Portal para renderização fora da árvore DOM
+ */
+
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// Componentes primitivos do Radix UI (re-exportados)
 const Dialog = DialogPrimitive.Root
-
 const DialogTrigger = DialogPrimitive.Trigger
-
 const DialogPortal = DialogPrimitive.Portal
-
 const DialogClose = DialogPrimitive.Close
 
+/**
+ * Componente DialogOverlay - Overlay de fundo
+ * Cria um overlay escuro que cobre toda a tela com animações de fade
+ */
 const DialogOverlay = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Overlay>,
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -29,6 +51,10 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+/**
+ * Componente DialogContent - Conteúdo principal do modal
+ * Container centralizado com animações de entrada/saída e botão de fechar
+ */
 const DialogContent = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Content>,
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -44,6 +70,7 @@ const DialogContent = React.forwardRef<
             {...props}
         >
             {children}
+            {/* Botão de fechar posicionado no canto superior direito */}
             <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
@@ -53,6 +80,10 @@ const DialogContent = React.forwardRef<
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
+/**
+ * Componente DialogHeader - Cabeçalho do modal
+ * Área superior com layout flexível para título e descrição
+ */
 const DialogHeader = ({
     className,
     ...props
@@ -67,6 +98,10 @@ const DialogHeader = ({
 )
 DialogHeader.displayName = "DialogHeader"
 
+/**
+ * Componente DialogFooter - Rodapé do modal
+ * Área inferior com layout responsivo para botões de ação
+ */
 const DialogFooter = ({
     className,
     ...props
@@ -81,6 +116,10 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = "DialogFooter"
 
+/**
+ * Componente DialogTitle - Título do modal
+ * Elemento de título semântico com tipografia otimizada
+ */
 const DialogTitle = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Title>,
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -96,6 +135,10 @@ const DialogTitle = React.forwardRef<
 ))
 DialogTitle.displayName = DialogPrimitive.Title.displayName
 
+/**
+ * Componente DialogDescription - Descrição do modal
+ * Texto descritivo com cor muted para informações complementares
+ */
 const DialogDescription = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Description>,
     React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>

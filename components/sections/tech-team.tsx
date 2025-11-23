@@ -1,11 +1,57 @@
 "use client";
 
+/**
+ * Componente TechTeam
+ *
+ * Seção que apresenta a equipe técnica da Sinout com perfis detalhados de cada membro.
+ * Exibe informações sobre responsabilidades, habilidades técnicas e links para redes sociais,
+ * com design responsivo e animações de entrada elegantes.
+ *
+ * Funcionalidades principais:
+ * - Perfis de 6 membros da equipe com fotos e informações completas
+ * - Responsabilidades específicas de cada membro com ícones coloridos
+ * - Tags de tecnologias/habilidades para cada perfil
+ * - Links para GitHub e LinkedIn (placeholders)
+ * - Animações de entrada escalonadas com Framer Motion
+ * - Design responsivo (1 coluna mobile, 2 tablet, 3 desktop)
+ * - Efeitos hover com gradientes e sombras
+ * - Cards com bordas gradientes personalizadas por membro
+ */
+
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, Database, Server, Code2, Bug, ClipboardList, Palette, Users, Target, Megaphone, DollarSign, Headphones, Layout } from "lucide-react";
+import { Github, Linkedin, Database, Server, Code2, Bug, ClipboardList, Palette, Users, Target, Megaphone, DollarSign, Headphones, Layout } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const team = [
+/**
+ * Interface para definir um membro da equipe
+ */
+interface TeamMember {
+    /** Nome completo do membro */
+    name: string;
+    /** Cargo/função na empresa */
+    role: string;
+    /** Handle do usuário (GitHub/Twitter) */
+    handle: string;
+    /** Caminho para a imagem do avatar */
+    avatar: string;
+    /** Array de tags/tecnologias */
+    tags: string[];
+    /** Classe CSS para gradiente de cor */
+    color: string;
+    /** Lista de responsabilidades com ícones */
+    responsibilities: Array<{
+        icon: React.ComponentType<{ className?: string }>;
+        label: string;
+        color: string;
+    }>;
+}
+
+/**
+ * Array com dados completos da equipe técnica
+ * Cada membro inclui informações pessoais, responsabilidades e habilidades
+ */
+const team: TeamMember[] = [
     {
         name: "Fabio R Rocha",
         role: "Scrum Master & Full Stack",
@@ -92,10 +138,16 @@ const team = [
     }
 ];
 
+/**
+ * Componente TechTeam
+ * Renderiza uma seção apresentando todos os membros da equipe técnica
+ * com animações e design responsivo
+ */
 export function TechTeam() {
     return (
         <section className="py-24 bg-background relative overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
+                {/* Cabeçalho da seção */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500">
                         As Mentes por Trás da Sinout
@@ -105,6 +157,7 @@ export function TechTeam() {
                     </p>
                 </div>
 
+                {/* Grid responsivo de cards da equipe */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {team.map((member, index) => (
                         <motion.div
@@ -115,11 +168,15 @@ export function TechTeam() {
                             transition={{ delay: index * 0.1 }}
                             className={`group relative p-1 rounded-2xl bg-gradient-to-br ${member.color} hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300`}
                         >
+                            {/* Efeito de brilho no hover */}
                             <div className="absolute inset-0 bg-white/5 blur-xl rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
+                            {/* Card principal com conteúdo */}
                             <div className="relative h-full bg-card rounded-xl p-6 flex flex-col border border-border">
+                                {/* Header com avatar e links sociais */}
                                 <div className="flex items-start justify-between mb-6">
                                     <div className="relative">
+                                        {/* Efeito de brilho no avatar */}
                                         <div className={`absolute -inset-1 bg-gradient-to-br ${member.color} rounded-full blur opacity-30 group-hover:opacity-60 transition-opacity`} />
                                         <Image
                                             src={member.avatar}
@@ -129,6 +186,7 @@ export function TechTeam() {
                                             className="relative rounded-full border-2 border-border bg-background"
                                         />
                                     </div>
+                                    {/* Links para redes sociais */}
                                     <div className="flex gap-2">
                                         <Link href="#" className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors text-muted-foreground hover:text-foreground">
                                             <Github className="w-4 h-4" />
@@ -139,6 +197,7 @@ export function TechTeam() {
                                     </div>
                                 </div>
 
+                                {/* Informações pessoais */}
                                 <div className="mb-4">
                                     <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
                                     <p className={`text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r ${member.color}`}>
@@ -147,6 +206,7 @@ export function TechTeam() {
                                     <p className="text-xs text-muted-foreground mt-1">{member.handle}</p>
                                 </div>
 
+                                {/* Seção de responsabilidades */}
                                 <div className="mb-6 p-4 rounded-lg bg-muted/50 border border-border flex-grow">
                                     <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Responsabilidades Principais</h4>
                                     <div className="grid grid-cols-2 gap-3">
@@ -158,6 +218,7 @@ export function TechTeam() {
                                     </div>
                                 </div>
 
+                                {/* Tags de tecnologias/habilidades */}
                                 <div className="mt-auto flex flex-wrap gap-2">
                                     {member.tags.map((tag, i) => (
                                         <span

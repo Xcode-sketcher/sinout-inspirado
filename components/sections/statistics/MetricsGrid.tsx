@@ -1,37 +1,68 @@
 "use client";
 
+/**
+ * Componente MetricsGrid
+ *
+ * Grid responsivo que exibe métricas estatísticas em tempo real do sistema de detecção facial,
+ * calculando dados de precisão, detecções e regras ativas baseados no histórico fornecido.
+ *
+ * Funcionalidades principais:
+ * - Cálculo automático de métricas diárias (precisão média, detecções, regras ativas)
+ * - Análise de sentimento predominante baseada no histórico
+ * - Grid responsivo (1 coluna mobile, 2 tablet, 4 desktop)
+ * - Animações de entrada escalonadas com Framer Motion
+ * - Cards com efeitos hover (elevação e mudança de cor da borda)
+ * - Ícones temáticos para cada métrica com cores diferenciadas
+ * - Descrições contextuais para cada indicador
+ */
+
 import { motion } from "framer-motion";
-import { Target, Eye, MessageSquare, Smile, TrendingUp, Activity } from "lucide-react";
+import { Target, Eye, MessageSquare, Smile } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HistoryItem, Rule } from "./types";
 
+/**
+ * Props do componente MetricsGrid
+ */
 interface MetricsGridProps {
+    /** Array de itens do histórico de detecções faciais */
     history: HistoryItem[];
+    /** Array de regras de conversão configuradas */
     rules: Rule[];
 }
 
+/**
+ * Componente MetricsGrid
+ * Renderiza um grid de métricas estatísticas calculadas dinamicamente
+ * baseado nos dados de histórico e regras fornecidos
+ */
 export function MetricsGrid({ history, rules }: MetricsGridProps) {
-    // Calculate metrics
+    // Filtra o histórico para obter apenas os dados de hoje
     const today = new Date().toDateString();
     const todaysHistory = history.filter(item => new Date(item.timestamp).toDateString() === today);
 
+    // Calcula o total de detecções realizadas hoje
     const totalDetections = todaysHistory.length;
 
+    // Calcula a precisão média das detecções de hoje
     const averageConfidence = todaysHistory.length > 0
         ? todaysHistory.reduce((acc, item) => acc + item.percentual_dominante, 0) / todaysHistory.length
         : 0;
 
+    // Conta quantas regras estão ativas
     const activeRules = rules.filter(r => r.ativo).length;
 
-    // Calculate dominant sentiment
+    // Analisa os sentimentos predominantes no histórico de hoje
     const sentimentCounts = todaysHistory.reduce((acc, item) => {
         acc[item.emocao_dominante] = (acc[item.emocao_dominante] || 0) + 1;
         return acc;
     }, {} as Record<string, number>);
 
+    // Determina o sentimento mais frequente
     const dominantSentiment = Object.entries(sentimentCounts).sort((a, b) => b[1] - a[1])[0];
     const dominantSentimentName = dominantSentiment ? dominantSentiment[0] : "N/A";
 
+    // Array com todas as métricas a serem exibidas
     const metrics = [
         {
             title: "Precisão Média da IA",
@@ -67,6 +98,7 @@ export function MetricsGrid({ history, rules }: MetricsGridProps) {
         }
     ];
 
+    // Configurações de animação para o container
     const container = {
         hidden: { opacity: 0 },
         show: {
@@ -77,6 +109,7 @@ export function MetricsGrid({ history, rules }: MetricsGridProps) {
         }
     };
 
+    // Configurações de animação para cada item
     const item = {
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 }
@@ -96,12 +129,15 @@ export function MetricsGrid({ history, rules }: MetricsGridProps) {
                             <CardTitle className="text-sm font-medium text-muted-foreground">
                                 {metric.title}
                             </CardTitle>
+                            {/* Ícone com fundo colorido personalizado */}
                             <div className={`p-2 rounded-full ${metric.bg}`}>
                                 <metric.icon className={`h-4 w-4 ${metric.color}`} />
                             </div>
                         </CardHeader>
                         <CardContent>
+                            {/* Valor principal da métrica */}
                             <div className="text-2xl font-bold">{metric.value}</div>
+                            {/* Descrição contextual */}
                             <p className="text-xs text-muted-foreground mt-1">
                                 {metric.description}
                             </p>

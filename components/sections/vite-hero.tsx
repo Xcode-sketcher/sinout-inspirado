@@ -5,12 +5,44 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { VitePipelineAnimation } from "./vite-pipeline-animation";
 
+/**
+ * Seção hero (principal) da landing page do Sinout
+ *
+ * Componente que apresenta a mensagem principal da empresa com título impactante,
+ * descrição explicativa e call-to-actions. Inclui animações de entrada sequenciais
+ * e um componente de animação visual que representa o pipeline de desenvolvimento.
+ *
+ * Estrutura da seção:
+ * - Layout responsivo com texto à esquerda e animação à direita
+ * - Título com gradiente de texto e efeito visual atrativo
+ * - Descrição explicativa sobre a transformação de ideias em produtos
+ * - Dois botões de ação: "Conheça a Equipe" e "Nossa Metodologia"
+ * - Animação SVG representando o pipeline de desenvolvimento
+ *
+ * Funcionalidades principais:
+ * - Animações de entrada com Framer Motion (fade-in + slide-up)
+ * - Design responsivo com breakpoints para mobile e desktop
+ * - Gradiente de texto dinâmico que se adapta ao tema
+ * - Links de navegação para seções internas e externas
+ * - Integração com componente de animação personalizado
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <ViteHero />
+ * ```
+ *
+ * @returns {JSX.Element} Seção hero completa com texto, botões e animação visual
+ */
 export function ViteHero() {
     return (
         <section className="relative pt-24 pb-12 md:pt-32 md:pb-20 overflow-hidden">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
+                {/* Layout flexível responsivo: coluna no mobile, linha no desktop */}
                 <div className="flex flex-col md:flex-row items-center">
+                    {/* Seção de texto - ocupa metade da largura no desktop */}
                     <div className="w-full md:w-1/2 text-center md:text-left mb-12 md:mb-0">
+                        {/* Título principal com animação de entrada */}
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -20,6 +52,8 @@ export function ViteHero() {
                             Transformando<br />
                             Conceitos em Produtos
                         </motion.h1>
+
+                        {/* Descrição com animação atrasada */}
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -28,18 +62,23 @@ export function ViteHero() {
                         >
                             Conheça como nossa equipe transforma ideias inovadoras em soluções tecnológicas reais e acessíveis.
                         </motion.p>
+
+                        {/* Botões de ação com animação mais atrasada */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
                             className="flex flex-wrap gap-4 justify-center md:justify-start"
                         >
+                            {/* Botão primário para conhecer a equipe */}
                             <Link
                                 href="/docs"
                                 className="px-8 py-3 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-medium transition-colors text-lg"
                             >
                                 Conheça a Equipe
                             </Link>
+
+                            {/* Botão secundário para metodologia com ícone */}
                             <Link
                                 href="https://github.com/vitejs/vite"
                                 target="_blank"
@@ -50,13 +89,16 @@ export function ViteHero() {
                         </motion.div>
                     </div>
 
+                    {/* Seção de animação visual - ocupa metade da largura no desktop */}
                     <div className="w-full md:w-1/2 flex justify-center relative">
+                        {/* Container da animação com efeito de escala na entrada */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                             className="w-full"
                         >
+                            {/* Componente de animação que representa o pipeline de desenvolvimento */}
                             <VitePipelineAnimation />
                         </motion.div>
                     </div>

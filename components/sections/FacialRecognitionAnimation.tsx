@@ -1,15 +1,70 @@
 "use client";
 
+/**
+ * Componente FacialRecognitionAnimation
+ *
+ * Demonstração interativa do sistema de reconhecimento facial do Sinout.
+ * Apresenta uma animação visual que simula o processo de detecção de emoções
+ * em tempo real, mostrando os pontos faciais, linhas de varredura e
+ * identificação de expressões emocionais.
+ *
+ * Funcionalidades principais:
+ * - Animação de pontos faciais (42 pontos simulados)
+ * - Ciclo automático entre diferentes emoções
+ * - Linhas de varredura durante detecção
+ * - Indicador visual de emoção detectada
+ * - Estatísticas técnicas da tecnologia
+ */
+
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Eye, Smile, Frown, Meh, Angry, Heart } from "lucide-react";
+import { Eye, Smile, Frown, Meh, Angry, Heart, type LucideIcon } from "lucide-react";
 
+/**
+ * Interface para definição de uma emoção
+ */
+interface EmotionData {
+    /** Nome da emoção em português */
+    name: string;
+    /** Componente do ícone Lucide React */
+    icon: LucideIcon;
+    /** Classe CSS para cor do texto */
+    color: string;
+    /** Classe CSS para cor de fundo */
+    bg: string;
+}
+
+/**
+ * Interface para coordenadas dos pontos faciais
+ */
+interface FacialPoint {
+    /** Posição X em porcentagem (0-100) */
+    x: number;
+    /** Posição Y em porcentagem (0-100) */
+    y: number;
+}
+
+/**
+ * Componente FacialRecognitionAnimation
+ *
+ * Renderiza uma demonstração visual completa do sistema de reconhecimento facial,
+ * incluindo animações, efeitos visuais e informações técnicas sobre a tecnologia.
+ */
 const FacialRecognitionAnimation = () => {
+    // Estado para controlar qual emoção está sendo exibida
     const [currentEmotion, setCurrentEmotion] = useState(0);
+
+    // Estado para controlar se a detecção está ativa
     const [isDetecting, setIsDetecting] = useState(false);
+
+    // Controles de animação do Framer Motion
     const controls = useAnimation();
 
-    const emotions = [
+    /**
+     * Array de emoções suportadas pelo sistema
+     * Cada emoção contém nome, ícone, cores para interface
+     */
+    const emotions: EmotionData[] = [
         { name: "Felicidade", icon: Smile, color: "text-yellow-400", bg: "bg-yellow-400/20" },
         { name: "Tristeza", icon: Frown, color: "text-blue-400", bg: "bg-blue-400/20" },
         { name: "Raiva", icon: Angry, color: "text-red-400", bg: "bg-red-400/20" },
@@ -17,46 +72,61 @@ const FacialRecognitionAnimation = () => {
         { name: "Alegria", icon: Heart, color: "text-pink-400", bg: "bg-pink-400/20" }
     ];
 
-    const facialPoints = [
-        // Olhos
+    /**
+     * Coordenadas dos pontos faciais simulados
+     * Representa 42 pontos distribuídos pelo rosto (olhos, nariz, boca, etc.)
+     */
+    const facialPoints: FacialPoint[] = [
+        // Pontos dos olhos (2 pontos)
         { x: 35, y: 35 }, { x: 65, y: 35 },
-        // Nariz
+        // Pontos do nariz (3 pontos)
         { x: 50, y: 45 }, { x: 48, y: 52 }, { x: 52, y: 52 },
-        // Boca
+        // Pontos da boca (3 pontos)
         { x: 40, y: 60 }, { x: 50, y: 65 }, { x: 60, y: 60 },
-        // Queixo
+        // Ponto do queixo (1 ponto)
         { x: 50, y: 75 },
-        // Sobrancelhas
+        // Pontos das sobrancelhas (4 pontos)
         { x: 32, y: 28 }, { x: 38, y: 28 }, { x: 62, y: 28 }, { x: 68, y: 28 }
     ];
 
+    /**
+     * Efeito que controla o ciclo automático de detecção de emoções
+     * A cada 3 segundos, inicia uma nova detecção que dura 1.5 segundos
+     */
     useEffect(() => {
         const interval = setInterval(() => {
+            // Inicia o processo de detecção
             setIsDetecting(true);
+
+            // Anima o contêiner principal (efeito de pulsação)
             controls.start({
                 scale: [1, 1.05, 1],
                 transition: { duration: 0.5 }
             });
 
+            // Após 1.5 segundos, muda para próxima emoção e para detecção
             setTimeout(() => {
                 setCurrentEmotion((prev) => (prev + 1) % emotions.length);
                 setIsDetecting(false);
             }, 1500);
         }, 3000);
 
+        // Limpa o intervalo quando componente é desmontado
         return () => clearInterval(interval);
     }, [controls, emotions.length]);
 
+    // Obtém os dados da emoção atualmente selecionada
     const currentEmotionData = emotions[currentEmotion];
 
     return (
         <section className="py-20 relative overflow-hidden">
-            {/* Background Effects */}
+            {/* Efeitos de fundo para criar atmosfera visual */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5" />
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
+                {/* Cabeçalho da seção com título e descrição */}
                 <div className="text-center mb-16">
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
@@ -78,8 +148,9 @@ const FacialRecognitionAnimation = () => {
                     </motion.p>
                 </div>
 
+                {/* Layout principal com animação e conteúdo */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    {/* Animation Section */}
+                    {/* Seção da animação facial */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -88,12 +159,12 @@ const FacialRecognitionAnimation = () => {
                         className="flex justify-center"
                     >
                         <div className="relative">
-                            {/* Face Outline */}
+                            {/* Contêiner principal do rosto com borda animada */}
                             <motion.div
                                 animate={controls}
                                 className="w-80 h-80 rounded-full border-4 border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-blue-500/10 flex items-center justify-center relative overflow-hidden"
                             >
-                                {/* Facial Points Animation */}
+                                {/* Pontos faciais animados - simulam os 42 pontos de detecção */}
                                 {facialPoints.map((point, index) => (
                                     <motion.div
                                         key={index}
@@ -115,7 +186,7 @@ const FacialRecognitionAnimation = () => {
                                     />
                                 ))}
 
-                                {/* Scanning Lines */}
+                                {/* Linha de varredura que simula o processo de análise */}
                                 <motion.div
                                     animate={{
                                         y: isDetecting ? [0, 320, 0] : 0,
@@ -129,7 +200,7 @@ const FacialRecognitionAnimation = () => {
                                     className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent"
                                 />
 
-                                {/* Eye Icon */}
+                                {/* Ícone do olho como elemento central */}
                                 <motion.div
                                     animate={{ scale: isDetecting ? [1, 1.2, 1] : 1 }}
                                     transition={{ duration: 0.5 }}
@@ -139,7 +210,7 @@ const FacialRecognitionAnimation = () => {
                                 </motion.div>
                             </motion.div>
 
-                            {/* Emotion Indicator */}
+                            {/* Indicador da emoção detectada */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -151,6 +222,7 @@ const FacialRecognitionAnimation = () => {
                                     <span className="font-semibold text-foreground">
                                         {currentEmotionData.name}
                                     </span>
+                                    {/* Indicador de atividade (pulsante durante detecção) */}
                                     <motion.div
                                         animate={{ scale: isDetecting ? [1, 1.2, 1] : 1 }}
                                         className="w-2 h-2 bg-green-400 rounded-full"
@@ -160,7 +232,7 @@ const FacialRecognitionAnimation = () => {
                         </div>
                     </motion.div>
 
-                    {/* Content Section */}
+                    {/* Seção de conteúdo explicativo */}
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -168,6 +240,7 @@ const FacialRecognitionAnimation = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="space-y-6"
                     >
+                        {/* Descrição da tecnologia */}
                         <div>
                             <h3 className="text-2xl font-bold text-foreground mb-4">
                                 Tecnologia Avançada de Detecção
@@ -178,7 +251,9 @@ const FacialRecognitionAnimation = () => {
                             </p>
                         </div>
 
+                        {/* Cards com estatísticas técnicas */}
                         <div className="space-y-4">
+                            {/* Card: Pontos Faciais */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -195,6 +270,7 @@ const FacialRecognitionAnimation = () => {
                                 </div>
                             </motion.div>
 
+                            {/* Card: Emoções Principais */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -211,6 +287,7 @@ const FacialRecognitionAnimation = () => {
                                 </div>
                             </motion.div>
 
+                            {/* Card: Processamento em Tempo Real */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}

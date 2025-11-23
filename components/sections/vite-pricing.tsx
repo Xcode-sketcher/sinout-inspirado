@@ -1,19 +1,42 @@
 "use client";
 
+/**
+ * Componente VitePricing
+ *
+ * Seção de preços da plataforma Sinout apresentando três planos de assinatura
+ * (Pessoal, Família e Institucional) com cards interativos e animações elegantes.
+ *
+ * Funcionalidades principais:
+ * - Três planos de preços com características distintas
+ * - Ícones SVG personalizados para cada categoria
+ * - Card "Mais Popular" destacado com efeitos visuais
+ * - Animações de entrada escalonadas com Framer Motion
+ * - Design responsivo (1 coluna mobile, 3 desktop)
+ * - Efeitos de hover e transições suaves
+ * - Links para registro integrados aos botões
+ */
+
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import Link from "next/link";
 
-// Ícones personalizados SVG
-const PersonalIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+/**
+ * Ícone personalizado para o plano Pessoal
+ * Representa um usuário individual com design minimalista
+ */
+const PersonalIcon = ({ className }: { className?: string }) => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <circle cx="12" cy="8" r="3" stroke="currentColor" strokeWidth="2" fill="none" />
         <path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z" stroke="currentColor" strokeWidth="2" fill="none" />
     </svg>
 );
 
-const FamilyIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+/**
+ * Ícone personalizado para o plano Família
+ * Representa múltiplos usuários conectados simbolizando família/cuidadores
+ */
+const FamilyIcon = ({ className }: { className?: string }) => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="2" fill="none" />
         <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="2" fill="none" />
         <circle cx="16" cy="8" r="2" stroke="currentColor" strokeWidth="2" fill="none" />
@@ -22,8 +45,12 @@ const FamilyIcon = () => (
     </svg>
 );
 
-const InstitutionalIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+/**
+ * Ícone personalizado para o plano Institucional
+ * Representa uma estrutura organizacional com divisões e setores
+ */
+const InstitutionalIcon = ({ className }: { className?: string }) => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
         <line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" strokeWidth="2" />
         <line x1="9" y1="3" x2="9" y2="17" stroke="currentColor" strokeWidth="2" />
@@ -33,7 +60,31 @@ const InstitutionalIcon = () => (
         <rect x="17" y="11" width="2" height="2" stroke="currentColor" strokeWidth="2" fill="none" />
     </svg>
 );
-const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
+
+/**
+ * Interface para definir um plano de preços
+ */
+interface PricingPlan {
+    /** Nome do plano */
+    name: string;
+    /** Preço do plano */
+    price: string;
+    /** Descrição do plano */
+    description: string;
+    /** Componente do ícone personalizado */
+    icon: React.ComponentType<{ className?: string }>;
+    /** Lista de funcionalidades incluídas */
+    features: string[];
+    /** Indica se é o plano mais popular */
+    popular: boolean;
+}
+
+/**
+ * Componente PricingCard
+ * Renderiza um card individual de plano de preços com animações e estilos
+ */
+const PricingCard = ({ plan, index }: { plan: PricingPlan; index: number }) => {
+    // Verifica se o plano é o mais popular para aplicar estilos especiais
     const isPopular = plan.popular;
 
     return (
@@ -47,12 +98,14 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
                 : "bg-card/50 border-border hover:border-primary/20"
                 } flex flex-col h-full transition-all duration-300`}
         >
+            {/* Badge "Mais Popular" para o plano destacado */}
             {isPopular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold uppercase tracking-wider shadow-lg">
                     Mais Popular
                 </div>
             )}
 
+            {/* Cabeçalho do card com ícone, nome e preço */}
             <div className="mb-8">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-muted/50 border border-border">
                     <plan.icon className="w-6 h-6 text-foreground" />
@@ -65,6 +118,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
                 </div>
             </div>
 
+            {/* Lista de funcionalidades com ícones de check */}
             <div className="flex-grow mb-8">
                 <ul className="space-y-4">
                     {plan.features.map((feature: string, i: number) => (
@@ -76,6 +130,7 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
                 </ul>
             </div>
 
+            {/* Botão de ação com link para registro */}
             <Link href="/register" className="w-full">
                 <button className={`w-full py-3 rounded-xl font-bold transition-all duration-300 ${isPopular
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
@@ -88,8 +143,13 @@ const PricingCard = ({ plan, index }: { plan: any; index: number }) => {
     );
 };
 
+/**
+ * Componente VitePricing
+ * Renderiza a seção completa de preços com todos os planos disponíveis
+ */
 export const VitePricing = () => {
-    const plans = [
+    // Array com dados completos dos três planos de preços
+    const plans: PricingPlan[] = [
         {
             name: "Pessoal",
             price: "Gratuito",
@@ -138,10 +198,11 @@ export const VitePricing = () => {
 
     return (
         <section className="py-20 relative overflow-hidden">
-            {/* Background Glows */}
+            {/* Efeitos de fundo com gradientes sutis */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
+                {/* Cabeçalho da seção */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mb-4">
                         Acessível para Todos
@@ -151,6 +212,7 @@ export const VitePricing = () => {
                     </p>
                 </div>
 
+                {/* Grid responsivo dos cards de preços */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
                     {plans.map((plan, index) => (
                         <PricingCard key={index} plan={plan} index={index} />

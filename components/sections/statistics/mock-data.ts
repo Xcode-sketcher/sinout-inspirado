@@ -1,5 +1,26 @@
 import { HistoryItem, Patient, Rule } from "./types";
 
+/**
+ * Dados mock para desenvolvimento e testes do dashboard de estatísticas
+ *
+ * Este módulo fornece dados simulados para o desenvolvimento do sistema
+ * de estatísticas do Sinout, permitindo testar a interface sem depender
+ * do backend em tempo real.
+ *
+ * Dados incluídos:
+ * - Paciente mock com informações básicas
+ * - Regras de automação configuradas
+ * - Histórico de detecções de emoções (últimas 24h)
+ *
+ * @module mock-data
+ */
+
+/**
+ * Dados mock de um paciente para testes
+ *
+ * Representa um paciente típico do sistema Sinout com informações
+ * básicas necessárias para o funcionamento do dashboard.
+ */
 export const mockPatient: Patient = {
     _id: 2,
     nome: "Private Patient",
@@ -11,6 +32,16 @@ export const mockPatient: Patient = {
     criado_por: "self"
 };
 
+/**
+ * Array de regras mock para automação de mensagens
+ *
+ * Define regras configuradas para disparo automático de mensagens
+ * baseado na detecção de emoções. Cada regra possui:
+ * - Emoção alvo e nível de intensidade
+ * - Percentual mínimo para ativação
+ * - Mensagem a ser enviada
+ * - Prioridade e status ativo
+ */
 export const mockRules: Rule[] = [
     {
         _id: "691de9f5404192217234036e",
@@ -50,7 +81,18 @@ export const mockRules: Rule[] = [
     }
 ];
 
-// Helper to generate mock history data for the last 24 hours
+/**
+ * Gera dados mock de histórico de detecções de emoções
+ *
+ * Cria um array de 50 itens simulando detecções de emoções
+ * nas últimas 24 horas. Cada item contém:
+ * - Timestamp aleatório dentro das últimas 24h
+ * - Emoções detectadas com percentuais
+ * - Emoção dominante
+ * - Possível mensagem disparada
+ *
+ * @returns Array ordenado de itens de histórico (mais recente primeiro)
+ */
 const generateMockHistory = (): HistoryItem[] => {
     const items: HistoryItem[] = [];
     const now = new Date();
@@ -84,5 +126,11 @@ const generateMockHistory = (): HistoryItem[] => {
     return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };
 
-// Generate mock data on module load (server-side) - this will be the same for SSR
+/**
+ * Dados mock de histórico gerados no carregamento do módulo
+ *
+ * Array de 50 detecções de emoções simuladas, ordenadas por timestamp
+ * decrescente (mais recentes primeiro). Gerado uma vez no server-side
+ * para consistência em SSR.
+ */
 export const mockHistory = generateMockHistory();
